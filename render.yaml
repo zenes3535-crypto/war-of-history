@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: war-of-history
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: node server.js
