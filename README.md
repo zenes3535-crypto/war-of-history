@@ -1,35 +1,35 @@
-# War of History – çok oyunculu web strateji oyunu
+# War of History
 
-Age of History'den esinlenen, tarayıcıda oynanan 2-8 kişilik oyun. Gerçek dünya haritası, 2800'den fazla il, ordular küçük toplar olarak haritada yürür.
+Age of History tarzı, tarayıcıda oynanan büyük strateji oyunu. Tek oyunculu (yapay zekâya karşı) veya 8 kişiye kadar çok oyunculu.
 
-## Bilgisayarında dene
-    npm install
-    npm run build
-    npm start
-    # http://localhost:3000
-
-## Ücretsiz yayınlama (Render.com)
-1. Bu klasörü GitHub'da yeni bir repoya yükle (node_modules hariç, .gitignore hazır).
-2. render.com'a GitHub ile üye ol → New + → Web Service → reponu seç.
-3. Runtime: Node, Build Command: `npm install && npm run build` (harita verisini indirip world.json üretir), Start Command: `node server.js`, Plan: Free. (render.yaml bunları zaten içeriyor.)
-4. Deploy bitince `https://war-of-history-xxxx.onrender.com` adresin olur. Oda kur, linki arkadaşlara yolla.
-
-Not: Render ücretsiz planda 15 dk kimse girmezse uyur, ilk girişte 30-60 sn geç açılır. Oyun sırasında kimse bağlıyken uyumaz.
+## Özellikler
+- 3 senaryo: Modern Dünya (2026), İkinci Dünya Savaşı (1939), Birinci Dünya Savaşı (1914)
+- Gerçek dünya haritası, 2.792 il, 900+ şehir, başkentler yıldızla gösterilir
+- Diğer bütün ülkeleri yapay zekâ yönetir: ekonomi, araştırma, ordu, savaş, barış, ittifak
+- Sağ üstte işleyen takvim, 5 hız kademesi ve duraklatma
+- Ekonomi: il bazında nüfus, gelir, yatırım (gelişmişlik), fabrika, kale, kışla, üniversite
+- Asker toplama, orduları il il yürütme, deniz geçişleri, muharebeler, işgal
+- Başkent düşerse ülkenin yarısı işgal edilir
+- Teknoloji ağacı: topçu, tank, savaş ve bombardıman uçakları, radar, füze, İHA...
+- Hava filosu ve hava saldırısı
+- Diplomasi: ilişki geliştirme, hediye, hakaret, ittifak, saldırmazlık paktı, savaş ilanı
+- Barış masası: işgal ettiğin illeri haritadan seçip iste, savaş skoru (yıldız) belirler
+- Ülkelerle sohbet: oyuncularla canlı, yapay zekâ ülkeleri ilişkinize göre cevap verir
+- Diplomatik harita modu (müttefik/düşman/pakt renkleri)
 
 ## Kontroller
-- Bölüğe tıkla = seç (Shift = çoklu), `A` = hepsini seç
-- Sağ tık = seçili bölükleri oraya yürüt (sadece kara yolu)
-- Kendi toprağına tıkla + `R` = yedek askerden yeni bölük kur
-- `F` = bölüğü ikiye böl, `S` = durdur
-- Sürükle = kaydır, tekerlek = yakınlaştır. Fareyi bir ilin üstüne getirince il adı, sahibi ve garnizonu görünür.
+- Sol tık: il veya ordu seç (Shift ile çoklu), çift tık: ildeki tüm ordular
+- Sağ tık: seçili orduları yürüt
+- Sürükle: kaydır, tekerlek: yakınlaştır
+- Boşluk: duraklat/devam, 1-5: hız, A: tüm orduları seç, Esc: kapat
 
-## Kurallar
-- Her ilin bir garnizonu (savunan askeri) vardır. Bölük düşman/tarafsız bir ile girince garnizonla savaşır; garnizon biterse il tamamen ele geçer, bölük ölürse garnizon kalır.
-- Bölük ilerledikçe çevresindeki toprağı (kaybetmediği yerleri) alır, sınır çizgisi onunla birlikte ilerler.
-- Başkent ili düşerse ülkenin geri kalan illerinin yarısı doğrudan geçer.
-- Savaşta ele geçirilen iller savaş puanı (yıldız) kazandırır. Barış teklif ederken yıldızın varsa yıldız başına 3 il talep edilir; karşı taraf kabul ederse iller geçer. Barışta iki taraf birbirine saldıramaz, 30 sn sonra tekrar savaş açılabilir.
-- Her hücre yedek asker üretir; yedekten bölük kurarsın. Toplam asker = sahadaki + yedek.
-- Haritanın %50'sini alan kazanır.
+## Çalıştırma
+    npm install
+    npm run build   # Natural Earth verisini indirir, public/world.json üretir
+    npm start       # http://localhost:3000
 
-## Harita verisi
-Natural Earth (kamu malı): ülkeler `world-atlas` paketinden, iller `ne_10m_admin_1_states_provinces`. `npm run build` il verisini indirip `public/world.json` dosyasını üretir (Render bunu otomatik yapar).
+## Yayın (Render)
+Build: `npm install && npm run build`, Start: `node server.js`, plan: Free.
+
+## Veri
+Harita: Natural Earth (kamu malı). Bayraklar: flagcdn.com.
