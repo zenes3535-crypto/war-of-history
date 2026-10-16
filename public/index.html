@@ -5,46 +5,92 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>War of History</title>
 <style>
-  :root { --bg:#16202b; --panel:rgba(18,26,36,.92); --line:#2d3b4d; --txt:#e8edf3; --mut:#93a1b3; --acc:#f0b429; }
+  :root { --bg:#0e1620; --panel:rgba(16,22,30,.94); --panel2:#1b2632; --line:#33414f; --txt:#eef2f6; --mut:#9aa7b4; --acc:#e8b84a; --red:#d9534f; --green:#4caf50; --blue:#4a90d9; }
   * { box-sizing:border-box; }
-  html,body { margin:0; height:100%; background:var(--bg); color:var(--txt); font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; overflow:hidden; user-select:none; }
-  canvas { position:fixed; inset:0; width:100%; height:100%; display:block; }
-  .panel { position:fixed; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px; backdrop-filter:blur(6px); }
+  html,body { margin:0; height:100%; background:var(--bg); color:var(--txt); font:13px/1.4 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; overflow:hidden; user-select:none; }
+  canvas#cv { position:fixed; inset:0; width:100%; height:100%; display:block; }
   .hidden { display:none !important; }
-  h1 { margin:0 0 4px; font-size:30px; letter-spacing:2px; color:var(--acc); }
-  h3 { margin:0 0 8px; font-size:13px; text-transform:uppercase; letter-spacing:1px; color:var(--mut); font-weight:600; }
-  input { width:100%; padding:10px 12px; border-radius:8px; border:1px solid var(--line); background:#0f1822; color:var(--txt); font-size:15px; margin-bottom:8px; }
-  button { padding:10px 14px; border-radius:8px; border:0; background:var(--acc); color:#1a1200; font-weight:700; font-size:14px; cursor:pointer; }
-  button.sec { background:#2a384a; color:var(--txt); }
-  button:disabled { opacity:.45; cursor:default; }
-  .row { display:flex; gap:8px; }
-  .row > * { flex:1; }
-  #menu { left:50%; top:50%; transform:translate(-50%,-50%); width:min(360px,92vw); text-align:center; }
-  #menu p { color:var(--mut); margin:0 0 14px; }
-  #err { color:#ff7b7b; min-height:18px; margin-top:6px; }
-  #lobby { left:12px; top:12px; width:min(300px,92vw); }
-  .pl { display:flex; align-items:center; gap:8px; padding:5px 0; }
-  .dot { width:14px; height:14px; border-radius:50%; flex:none; border:2px solid #fff3; }
-  .pl small { color:var(--mut); margin-left:auto; }
-  .code { font-size:28px; letter-spacing:6px; font-weight:800; color:var(--acc); }
-  #hud { left:12px; top:12px; width:min(260px,60vw); }
-  #hud .big { font-size:26px; font-weight:800; }
-  #hud .mut { color:var(--mut); font-size:12px; }
-  #score { right:12px; top:12px; min-width:190px; }
-  .sb { display:flex; align-items:center; gap:8px; padding:3px 0; }
-  .stars { letter-spacing:1px; color:#f0b429; font-size:13px; }
-  .stars .off { color:#455468; }
-  .badge { font-size:11px; padding:1px 6px; border-radius:6px; background:#2a384a; }
-  .badge.peace { background:#245c3a; }
-  .badge.war { background:#6b2630; }
-  .dipb { padding:3px 8px; font-size:12px; }
-  .bar { height:6px; border-radius:3px; background:#0003; flex:1; overflow:hidden; min-width:50px; }
-  .bar i { display:block; height:100%; }
-  #help { left:50%; bottom:10px; transform:translateX(-50%); padding:8px 14px; color:var(--mut); font-size:12px; white-space:nowrap; max-width:96vw; overflow:hidden; text-overflow:ellipsis; }
-  #banner { left:50%; top:40%; transform:translate(-50%,-50%); text-align:center; font-size:30px; font-weight:800; padding:24px 40px; }
-  #toasts { position:fixed; left:50%; top:14px; transform:translateX(-50%); display:flex; flex-direction:column; gap:6px; pointer-events:none; align-items:center; }
-  .toast { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:6px 12px; font-size:13px; }
-  kbd { background:#2a384a; border-radius:4px; padding:1px 5px; font-size:11px; }
+  .panel { position:fixed; background:var(--panel); border:1px solid var(--line); border-radius:10px; box-shadow:0 6px 24px #0008; }
+  h1 { margin:0; font:800 34px/1.1 Georgia,'Times New Roman',serif; letter-spacing:3px; color:var(--acc); text-shadow:0 2px 0 #000; }
+  h3 { margin:0 0 8px; font-size:11px; text-transform:uppercase; letter-spacing:1.2px; color:var(--mut); font-weight:700; }
+  input, select { width:100%; padding:9px 11px; border-radius:7px; border:1px solid var(--line); background:#0b121a; color:var(--txt); font-size:14px; }
+  button { padding:8px 12px; border-radius:7px; border:0; background:var(--acc); color:#1d1500; font-weight:700; font-size:13px; cursor:pointer; white-space:nowrap; }
+  button.sec { background:#2b3a4a; color:var(--txt); }
+  button.red { background:#a8322e; color:#fff; }
+  button.green { background:#2f7d43; color:#fff; }
+  button:disabled { opacity:.4; cursor:default; }
+  button:not(:disabled):hover { filter:brightness(1.12); }
+  .row { display:flex; gap:6px; align-items:center; }
+  .row > .grow { flex:1; }
+  .mut { color:var(--mut); }
+  .flag { width:22px; height:15px; border-radius:2px; object-fit:cover; vertical-align:middle; box-shadow:0 0 0 1px #0006; background:#555; display:inline-block; }
+  .flag.big { width:42px; height:28px; }
+  /* menü */
+  #menu { left:50%; top:50%; transform:translate(-50%,-50%); width:min(380px,92vw); padding:22px; text-align:center; }
+  #menu p { color:var(--mut); margin:8px 0 16px; }
+  #menu button { width:100%; margin-top:8px; padding:11px; font-size:14px; }
+  #err { color:#ff8a80; min-height:18px; margin-top:8px; }
+  /* lobi */
+  #lobby { left:12px; top:12px; width:min(320px,94vw); padding:14px; max-height:calc(100% - 24px); overflow:auto; }
+  .code { font:800 26px monospace; letter-spacing:6px; color:var(--acc); }
+  .pl { display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:1px solid #ffffff10; }
+  .pl small { margin-left:auto; color:var(--mut); }
+  /* üst bar */
+  #top { left:0; right:0; top:0; border-radius:0; border-width:0 0 1px; padding:6px 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; z-index:5; }
+  #top .stat { display:flex; align-items:center; gap:5px; font-weight:700; }
+  #top .stat small { font-weight:500; color:var(--mut); }
+  #me { display:flex; align-items:center; gap:8px; font:800 15px Georgia,serif; letter-spacing:1px; cursor:pointer; }
+  #clock { margin-left:auto; display:flex; align-items:center; gap:6px; }
+  #date { font:700 15px Georgia,serif; min-width:150px; text-align:right; }
+  .spd { padding:4px 8px; background:#2b3a4a; color:var(--txt); font-size:12px; }
+  .spd.on { background:var(--acc); color:#1d1500; }
+  /* sol araç çubuğu */
+  #tools { left:8px; top:56px; display:flex; flex-direction:column; gap:6px; padding:6px; z-index:4; }
+  #tools button { width:42px; height:42px; padding:0; font-size:20px; background:#223040; }
+  #tools button.on { background:var(--acc); }
+  /* paneller */
+  .side { left:60px; top:56px; width:min(380px,calc(100vw - 70px)); max-height:calc(100% - 70px); overflow:auto; padding:12px; z-index:4; }
+  #provPanel { left:60px; bottom:10px; width:min(360px,calc(100vw - 70px)); padding:12px; z-index:3; max-height:60vh; overflow:auto; }
+  #civPanel { right:10px; top:56px; width:min(340px,92vw); padding:12px; z-index:4; max-height:calc(100% - 70px); overflow:auto; }
+  .close { float:right; background:transparent; color:var(--mut); font-size:18px; padding:0 4px; }
+  .kv { display:grid; grid-template-columns:auto 1fr; gap:3px 10px; margin:6px 0; }
+  .kv b { text-align:right; }
+  .bld { display:flex; align-items:center; gap:6px; padding:5px 0; border-top:1px solid #ffffff10; }
+  .bld .grow { flex:1; }
+  .lvl { color:var(--acc); font-weight:700; }
+  .bar { height:7px; border-radius:4px; background:#0006; overflow:hidden; }
+  .bar i { display:block; height:100%; background:var(--acc); }
+  .relbar { height:8px; border-radius:4px; background:linear-gradient(90deg,#c0392b,#7f8c8d 50%,#27ae60); position:relative; }
+  .relbar i { position:absolute; top:-3px; width:4px; height:14px; background:#fff; border-radius:2px; }
+  .tech { padding:8px; border-radius:7px; background:var(--panel2); margin-bottom:6px; border:1px solid transparent; cursor:pointer; }
+  .tech.done { opacity:.55; cursor:default; }
+  .tech.lock { opacity:.4; cursor:default; }
+  .tech.cur { border-color:var(--acc); }
+  .civrow { display:flex; align-items:center; gap:8px; padding:5px 4px; border-radius:6px; cursor:pointer; }
+  .civrow:hover { background:#ffffff0d; }
+  .tag { font-size:11px; padding:1px 6px; border-radius:6px; background:#2b3a4a; }
+  .tag.war { background:#7a2723; } .tag.ally { background:#1f5b8f; } .tag.pact { background:#2f6b3c; }
+  .btns { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:8px; }
+  .stars { color:#f5c542; letter-spacing:1px; } .stars .off { color:#4a5866; }
+  /* sohbet */
+  #chatBox { height:260px; overflow:auto; background:#0007; border-radius:7px; padding:8px; margin:8px 0; user-select:text; }
+  .msg { margin:4px 0; } .msg.me { text-align:right; } .msg span { display:inline-block; padding:5px 9px; border-radius:9px; background:#2b3a4a; max-width:85%; text-align:left; }
+  .msg.me span { background:#6b5418; }
+  /* modal */
+  #modal { left:50%; top:50%; transform:translate(-50%,-50%); width:min(460px,94vw); max-height:86vh; overflow:auto; padding:16px; z-index:10; }
+  #modal.right { left:auto; right:10px; top:56px; transform:none; }
+  #modal .plist { max-height:220px; overflow:auto; background:#0006; border-radius:7px; padding:6px; margin:6px 0; }
+  #modal label { display:flex; align-items:center; gap:8px; padding:3px 2px; cursor:pointer; }
+  #modal input[type=checkbox] { width:auto; }
+  /* olay akışı */
+  #toasts { position:fixed; right:10px; bottom:10px; display:flex; flex-direction:column; gap:5px; align-items:flex-end; pointer-events:none; z-index:6; max-width:min(440px,90vw); }
+  .toast { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:6px 10px; font-size:12.5px; box-shadow:0 3px 12px #0007; }
+  .toast.err { border-color:#a8322e; }
+  #sel { left:50%; bottom:10px; transform:translateX(-50%); padding:7px 12px; z-index:3; display:flex; gap:8px; align-items:center; }
+  #tip { position:fixed; pointer-events:none; background:#000c; padding:5px 8px; border-radius:6px; font-size:12px; z-index:9; white-space:nowrap; }
+  #defeat { left:50%; top:40%; transform:translate(-50%,-50%); padding:24px 34px; text-align:center; z-index:11; font:800 26px Georgia,serif; }
+  .evrow { padding:4px 0; border-bottom:1px solid #ffffff10; } .evrow small { color:var(--mut); }
+  @media (max-width:700px) { #top { gap:8px; font-size:12px; } #date { min-width:0; } .side, #provPanel { left:8px; width:calc(100vw - 16px); } #tools { top:auto; bottom:8px; flex-direction:row; left:8px; } }
 </style>
 </head>
 <body>
@@ -52,455 +98,57 @@
 
 <div id="menu" class="panel">
   <h1>WAR OF HISTORY</h1>
-  <p>Ordularını harita üzerinde yürüt, geçtiğin toprakları ele geçir.</p>
-  <input id="name" maxlength="16" placeholder="Adın">
-  <button id="create" style="width:100%">Oda Kur</button>
-  <div style="color:var(--mut);margin:10px 0">veya</div>
-  <div class="row"><input id="code" maxlength="4" placeholder="Oda kodu" style="text-transform:uppercase;margin:0"><button id="join" class="sec">Katıl</button></div>
+  <p>Bir ülke seç, ekonomini büyüt, ittifaklar kur, dünyayı fethet.</p>
+  <input id="name" maxlength="16" placeholder="Liderin adı">
+  <button id="solo">🎖 Tek Oyunculu (Yapay Zekâya Karşı)</button>
+  <button id="create" class="sec">👥 Çok Oyunculu Oda Kur</button>
+  <div class="row" style="margin-top:8px"><input id="code" maxlength="4" placeholder="Oda kodu" style="text-transform:uppercase"><button id="join" class="sec" style="width:auto;margin:0">Katıl</button></div>
   <div id="err"></div>
+  <div class="mut" id="loading" style="margin-top:6px;font-size:12px">Harita yükleniyor…</div>
 </div>
 
 <div id="lobby" class="panel hidden">
-  <h3>Oda kodu</h3>
-  <div class="code" id="roomCode">----</div>
-  <button class="sec" id="copy" style="margin:8px 0 14px;width:100%">Davet linkini kopyala</button>
-  <h3>Oyuncular</h3>
+  <div id="roomBox"><h3>Oda kodu</h3><div class="row"><div class="code grow" id="roomCode">----</div><button class="sec" id="copy">Linki kopyala</button></div></div>
+  <h3 style="margin-top:12px">Senaryo</h3>
+  <select id="scenario"></select>
+  <h3 style="margin-top:12px">Oyun hızı</h3>
+  <select id="speedSel"></select>
+  <h3 style="margin-top:12px">Oyuncular</h3>
   <div id="plist"></div>
-  <p style="color:var(--mut);margin:12px 0">Haritadan bir ülkeye tıklayarak başlangıç ülkeni seç. Seçmezsen rastgele verilir.</p>
+  <div id="pickInfo" style="margin:10px 0;padding:10px;border-radius:8px;background:#0006">Haritada bir ülkeye tıklayarak ülkeni seç.</div>
   <button id="start" style="width:100%">Oyunu Başlat</button>
-  <div id="wait" class="hidden" style="color:var(--mut);text-align:center">Kurucunun başlatması bekleniyor…</div>
+  <div id="wait" class="hidden mut" style="text-align:center;margin-top:6px">Kurucunun başlatması bekleniyor…</div>
 </div>
 
-<div id="hud" class="panel hidden">
-  <h3>Toplam asker</h3>
-  <div class="big" id="total">0</div>
-  <div class="mut" id="split2"></div>
-  <div class="mut" id="income"></div>
-  <div class="row" style="margin-top:10px"><input id="amt" type="number" min="5" value="20" style="margin:0"><button id="recruit">Bölük kur</button></div>
-  <div class="mut" style="margin-top:6px">Kendi toprağına tıkla → <kbd>R</kbd> ile o noktada bölük kur</div>
-  <div class="row" style="margin-top:10px"><button class="sec" id="split">Böl (F)</button><button class="sec" id="stop">Dur (S)</button></div>
+<div id="top" class="panel hidden">
+  <div id="me"></div>
+  <div class="stat" title="Hazine (günlük net gelir)">💰 <span id="sGold">0</span> <small id="sNet"></small></div>
+  <div class="stat" title="Toplam asker (sahadaki ordular)">⚔ <span id="sTroops">0</span></div>
+  <div class="stat" title="İnsan gücü (asker toplanabilecek nüfus)">👥 <span id="sMan">0</span></div>
+  <div class="stat" title="Nüfus">🏙 <span id="sPop">0</span></div>
+  <div class="stat" title="Araştırma">🔬 <span id="sRes">—</span></div>
+  <div class="stat" title="Hava filosu">✈ <span id="sAir">0</span></div>
+  <div id="clock"><span id="date">—</span><span id="spdBtns"></span></div>
 </div>
-<div id="score" class="panel hidden"></div>
-<div id="dip" class="panel hidden" style="right:12px;top:150px;min-width:230px"></div>
-<div id="offer" class="panel hidden" style="left:50%;top:90px;transform:translateX(-50%);text-align:center;min-width:300px"></div>
-<div id="tip" class="panel hidden" style="left:12px;bottom:12px;padding:8px 12px;font-size:13px;pointer-events:none"></div>
-<div id="sel" class="panel hidden" style="left:50%;bottom:56px;transform:translateX(-50%);padding:6px 14px;font-size:13px"></div>
-<div id="help" class="panel hidden">Bölüğe tıkla = seç · Sağ tık = yürüt · Sürükle = kaydır · Tekerlek = yakınlaştır · <kbd>A</kbd> hepsini seç</div>
-<div id="banner" class="panel hidden"></div>
+
+<div id="tools" class="panel hidden">
+  <button data-p="overview" title="Ülkem">🏛</button>
+  <button data-p="tech" title="Teknoloji">🔬</button>
+  <button data-p="diplo" title="Diplomasi">🤝</button>
+  <button data-p="chat" title="Mesajlar">💬</button>
+  <button data-p="log" title="Olaylar">📜</button>
+  <button id="mapMode" title="Harita modu: Siyasi / Diplomatik">🗺</button>
+</div>
+
+<div id="side" class="panel side hidden"></div>
+<div id="provPanel" class="panel hidden"></div>
+<div id="civPanel" class="panel hidden"></div>
+<div id="modal" class="panel hidden"></div>
+<div id="sel" class="panel hidden"></div>
+<div id="defeat" class="panel hidden"></div>
+<div id="tip" class="hidden"></div>
 <div id="toasts"></div>
 
-<script>
-const $ = id => document.getElementById(id);
-try { const q0 = new URLSearchParams(location.search).get('room'); if (q0) document.getElementById('code').value = q0.toUpperCase(); } catch {}
-const cv = $('cv'), ctx = cv.getContext('2d');
-let W = 0, H = 0, DPR = 1;
-function resize() { DPR = window.devicePixelRatio || 1; W = innerWidth; H = innerHeight; cv.width = W * DPR; cv.height = H * DPR; }
-addEventListener('resize', resize); resize();
-
-// ---------- Dünya verisi ----------
-let world, GW, GH, CELLPX, cellCountry, cellProv, provCount, provOwner, garrison = [], dipRel = [], offers = [], borderPaths = [],  LAND = 0, paths = [], allPath, ownCv, ownCtx, ownImg, ownData, ownDirty = true;
-let landCv; // arka plan (deniz+kara+sınırlar) önbelleği için değil, path'ler doğrudan çiziliyor
-const hex2rgb = h => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
-
-// ---------- Durum ----------
-let ws, myId = 0, roomCode = '', lobby = null, playing = false, ended = false;
-let owner, own = {}, units = new Map(), reserve = 0, selected = new Set(), recruitCell = -1, myColors = {};
-
-// ---------- Kamera ----------
-let cam = { x: 0, y: 0, s: 1 };
-function fitCam() { cam.s = Math.min(W / world.w, H / world.h) * 0.98; cam.x = (W - world.w * cam.s) / 2; cam.y = (H - world.h * cam.s) / 2; }
-const toWorld = (sx, sy) => [(sx - cam.x) / cam.s, (sy - cam.y) / cam.s];
-const toCell = (sx, sy) => { const [wx, wy] = toWorld(sx, sy); const gx = Math.floor(wx / CELLPX), gy = Math.floor(wy / CELLPX); return (gx < 0 || gy < 0 || gx >= GW || gy >= GH) ? -1 : gy * GW + gx; };
-
-async function init() {
-  world = await (await fetch('world.json')).json();
-  GW = world.grid.gw; GH = world.grid.gh; CELLPX = world.grid.cell;
-  cellCountry = new Int16Array(GW * GH); cellProv = new Int32Array(GW * GH);
-  let k = 0; const r = world.grid.rle;
-  for (let i = 0; i < r.length; i += 2) for (let j = 0; j < r[i + 1]; j++) cellProv[k++] = r[i];
-  provCount = new Int32Array(world.provs.length); provOwner = new Uint8Array(world.provs.length);
-  for (let i = 0; i < cellProv.length; i++) if (cellProv[i]) { cellCountry[i] = world.provs[cellProv[i] - 1][1] + 1; provCount[cellProv[i] - 1]++; LAND++; }
-  paths = world.countries.map(c => new Path2D(c.d));
-  allPath = new Path2D(); paths.forEach(p => allPath.addPath(p));
-  buildProv();
-  ownCv = document.createElement('canvas'); ownCv.width = GW; ownCv.height = GH;
-  ownCtx = ownCv.getContext('2d'); ownImg = ownCtx.createImageData(GW, GH); ownData = new Uint32Array(ownImg.data.buffer);
-  owner = new Uint8Array(GW * GH);
-  fitCam();
-  try { $('name').value = localStorage.getItem('fetih_name') || ''; } catch {}
-  requestAnimationFrame(frame);
-}
-
-// ---------- Ağ ----------
-function connect(first) {
-  const name = $('name').value.trim() || 'Oyuncu';
-  try { localStorage.setItem('fetih_name', name); } catch {}
-  $('err').textContent = '';
-  ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host);
-  ws.onopen = () => ws.send(JSON.stringify({ ...first, name }));
-  ws.onmessage = e => handle(JSON.parse(e.data));
-  ws.onclose = () => { if (playing && !ended) toast('Bağlantı koptu, sayfayı yenile ve aynı isimle tekrar katıl.'); };
-}
-const send = o => ws && ws.readyState === 1 && ws.send(JSON.stringify(o));
-
-function colorOf(id) { return (lobby && lobby.players.find(p => p.id === id) || {}).color || '#888'; }
-
-function handle(m) {
-  if (m.type === 'error') { $('err').textContent = m.msg; return; }
-  if (m.type === 'welcome') { myId = m.id; roomCode = m.code; $('menu').classList.add('hidden'); $('lobby').classList.remove('hidden'); history.replaceState(null, '', '?room=' + m.code); }
-  else if (m.type === 'lobby') { lobby = m; renderLobby(); if (!playing) paintLobby(); }
-  else if (m.type === 'start') { playing = true; $('lobby').classList.add('hidden'); ['hud', 'score', 'help'].forEach(i => $(i).classList.remove('hidden')); }
-  else if (m.type === 'full') {
-    const b = atob(m.owner); owner = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) owner[i] = b.charCodeAt(i);
-    own = m.own; reserve = m.reserve; provOwner = Uint8Array.from(m.provOwner); garrison = m.gar; setUnits(m.units); repaintOwners(); renderScore(); updateHud();
-    if (recruitCell < 0) { const u = [...units.values()].find(u => u.owner === myId); if (u) recruitCell = Math.floor(u.y) * GW + Math.floor(u.x); fitToMine(); }
-  } else if (m.type === 'tick') {
-    for (let i = 0; i < m.changes.length; i += 2) { owner[m.changes[i]] = m.changes[i + 1]; paintCell(m.changes[i]); }
-    ownDirty = true; own = m.own; reserve = m.reserve; setUnits(m.units);
-    for (let i = 0; i < m.pc.length; i += 2) provOwner[m.pc[i]] = m.pc[i + 1];
-    if (m.gar) garrison = m.gar;
-    if (m.events) for (const ev of m.events) onEvent(ev);
-    updateHud();
-  } else if (m.type === 'dip') { dipRel = m.rel; renderDip();
-  } else if (m.type === 'offer') { offers.push(m); renderOffer();
-  } else if (m.type === 'info') { toast(m.msg);
-  } else if (m.type === 'end') {
-    ended = true; const w = lobby.players.find(p => p.id === m.winner);
-    const b = $('banner'); b.classList.remove('hidden');
-    b.innerHTML = (m.winner === myId ? '🏆 Kazandın!' : (w ? w.name + ' kazandı' : 'Oyun bitti')) + '<div style="font-size:14px;margin-top:10px"><button onclick="location.href=location.pathname">Ana menü</button></div>';
-  }
-}
-
-function pname(id) { const p = lobby && lobby.players.find(x => x.id === id); return p ? p.name : 'Tarafsız'; }
-function onEvent(ev) {
-  const prov = world.provs[ev.prov], c = world.countries[prov[1]].name;
-  if (ev.type === 'capital') toast(`🏛 ${prov[0]} (${c} başkenti) düştü! ${pname(ev.by)}, ülkenin yarısını aldı (${ev.taken} il)`);
-  else if (ev.by === myId || ev.from === myId) toast(`${pname(ev.by)}, ${prov[0]} ilini aldı`);
-}
-function setUnits(list) {
-  const seen = new Set();
-  for (const [id, o, x, y, t, dest, fight] of list) {
-    seen.add(id);
-    let u = units.get(id);
-    if (!u) { u = { id, rx: x, ry: y }; units.set(id, u); }
-    Object.assign(u, { owner: o, x, y, troops: t, dest, fight });
-  }
-  for (const id of [...units.keys()]) if (!seen.has(id)) { units.delete(id); selected.delete(id); }
-}
-
-// ---------- Sahiplik katmanı: hafif ton + sınır çizgileri ----------
-function rgba(hex, a = 255) { const [r, g, b] = hex2rgb(hex); return (a << 24) | (b << 16) | (g << 8) | r; }
-function paintCell(i) { const o = owner[i]; ownData[i] = o ? rgba(colorOf(o), 38) : 0; }
-function repaintOwners() { for (let i = 0; i < owner.length; i++) paintCell(i); ownDirty = true; }
-function paintLobby() {
-  if (!lobby) return;
-  owner.fill(0);
-  for (const p of lobby.players) if (p.country != null) for (let i = 0; i < cellCountry.length; i++) if (cellCountry[i] === p.country + 1) owner[i] = p.id;
-  repaintOwners();
-}
-// Her oyuncunun toprağının çevresine kendi renginde sınır çizgisi. Çizgi sınırın tam üstüne çekilir,
-// sonra sadece kendi toprağına kırpılır: iki oyuncu komşuysa sınırın iki yanında iki renk görünür, köşeler temiz birleşir.
-function rebuildBorders() {
-  const area = {}, edges = {}, C = CELLPX;
-  for (let y = 0; y < GH; y++) {
-    let runO = 0, runX = 0;
-    for (let x = 0; x <= GW; x++) {
-      const o = x < GW ? owner[y * GW + x] : 0;
-      if (o !== runO) { if (runO) (area[runO] ||= new Path2D()).rect(runX * C, y * C, (x - runX) * C, C); runO = o; runX = x; }
-      if (x >= GW || !o) continue;
-      const i = y * GW + x;
-      let p = null;
-      const edge = (n, x1, y1, x2, y2) => { if (cellProv[n] && owner[n] !== o) { (p ||= (edges[o] ||= new Path2D())).moveTo(x1 * C, y1 * C); p.lineTo(x2 * C, y2 * C); } };
-      if (x > 0) edge(i - 1, x, y, x, y + 1);
-      if (x < GW - 1) edge(i + 1, x + 1, y, x + 1, y + 1);
-      if (y > 0) edge(i - GW, x, y, x + 1, y);
-      if (y < GH - 1) edge(i + GW, x, y + 1, x + 1, y + 1);
-    }
-  }
-  borderPaths = Object.keys(edges).map(o => [+o, area[o], edges[o]]);
-}
-
-// ---------- Arayüz ----------
-function renderLobby() {
-  $('roomCode').textContent = lobby.code;
-  $('plist').innerHTML = lobby.players.map(p => `<div class="pl"><span class="dot" style="background:${p.color}"></span><b>${esc(p.name)}</b>${p.id === lobby.hostId ? ' 👑' : ''}${p.id === myId ? ' (sen)' : ''}<small>${p.country != null ? esc(world.countries[p.country].name) : '—'}</small></div>`).join('');
-  const host = lobby.hostId === myId;
-  $('start').classList.toggle('hidden', !host); $('wait').classList.toggle('hidden', host);
-}
-const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-function renderScore() {
-  if (!lobby) return;
-  $('score').innerHTML = '<h3>Skor</h3>' + [...lobby.players].sort((a, b) => (own[b.id] || 0) - (own[a.id] || 0)).map(p => {
-    const pct = ((own[p.id] || 0) / LAND * 100);
-    return `<div class="sb"><span class="dot" style="background:${p.color}"></span><span style="min-width:62px;${p.online ? '' : 'opacity:.5'}">${esc(p.name)}</span><span class="bar"><i style="width:${Math.min(100, pct * 2)}%;background:${p.color}"></i></span><b>${pct.toFixed(0)}%</b></div>`;
-  }).join('') + '<div class="mut" style="color:var(--mut);font-size:11px;margin-top:6px">%50 toprak = zafer</div>';
-}
-function updateHud() {
-  let inField = 0; for (const u of units.values()) if (u.owner === myId) inField += u.troops;
-  $('total').textContent = Math.floor(inField + reserve);
-  $('split2').textContent = 'Sahada ' + Math.floor(inField) + ' · Yedek ' + Math.floor(reserve);
-  $('income').textContent = '+' + ((own[myId] || 0) * 0.0012 * 5).toFixed(1) + ' asker/sn · ' + (own[myId] || 0) + ' hücre';
-  let sel = 0; for (const id of selected) { const u = units.get(id); if (u) sel += u.troops; }
-  const selEl = $('sel');
-  if (selected.size) { selEl.classList.remove('hidden'); selEl.textContent = 'Seçili: ' + selected.size + ' bölük · ' + Math.floor(sel) + ' asker'; } else selEl.classList.add('hidden');
-  renderScore();
-}
-function stars(n) { return '<span class="stars">' + '★'.repeat(n) + '<span class="off">' + '☆'.repeat(5 - n) + '</span></span>'; }
-function renderDip() {
-  if (!lobby || !playing) return;
-  const rows = dipRel.map(r => {
-    const p = lobby.players.find(x => x.id === r.id); if (!p) return '';
-    return `<div style="padding:5px 0;border-top:1px solid var(--line)"><div class="sb"><span class="dot" style="background:${p.color}"></span><b>${esc(p.name)}</b><span class="badge ${r.peace ? 'peace' : 'war'}" style="margin-left:auto">${r.peace ? 'Barış' : 'Savaş'}</span></div>
-      <div style="display:flex;align-items:center;gap:6px;margin-top:3px"><span class="mut" style="color:var(--mut);font-size:11px">sen</span>${stars(r.mine)}<span class="mut" style="color:var(--mut);font-size:11px;margin-left:6px">o</span>${stars(r.theirs)}
-      <button class="sec dipb" style="margin-left:auto" onclick="send({type:'${r.peace ? 'war' : 'peace'}',to:${r.id}})">${r.peace ? 'Savaş aç' : 'Barış öner'}</button></div></div>`;
-  }).join('');
-  $('dip').classList.toggle('hidden', !rows);
-  $('dip').innerHTML = '<h3>Diplomasi</h3>' + rows + '<div style="color:var(--mut);font-size:11px;margin-top:6px">Yıldız = savaş puanı. Yıldızın varsa barışta il talep edebilirsin (yıldız başına 3 il).</div>';
-}
-function renderOffer() {
-  const el = $('offer');
-  if (!offers.length) return el.classList.add('hidden');
-  const o = offers[0], p = lobby && lobby.players.find(x => x.id === o.from);
-  el.classList.remove('hidden');
-  el.innerHTML = `<b>${esc(p ? p.name : '?')}</b> barış istiyor<div style="margin:6px 0">${o.demand ? `<b>${o.demand} il</b> talep ediyor` : 'Tazminat istemiyor'}</div><div class="mut" style="color:var(--mut);font-size:12px;margin-bottom:8px">Onun yıldızı ${stars(o.stars)} · Senin yıldızın ${stars(o.theirStars)}</div>
-  <div class="row"><button onclick="reply(true)">Kabul</button><button class="sec" onclick="reply(false)">Reddet</button></div>`;
-}
-function reply(ok) { const o = offers.shift(); if (o) send({ type: 'peaceReply', from: o.from, accept: ok }); renderOffer(); }
-function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; $('toasts').appendChild(d); setTimeout(() => d.remove(), 4000); }
-function fitToMine() {
-  const mine = [...units.values()].filter(u => u.owner === myId); if (!mine.length) return;
-  cam.s = Math.min(W / world.w, H / world.h) * 2.4;
-  cam.x = W / 2 - mine[0].x * CELLPX * cam.s; cam.y = H / 2 - mine[0].y * CELLPX * cam.s;
-}
-
-$('create').onclick = () => connect({ type: 'create' });
-$('join').onclick = () => connect({ type: 'join', code: $('code').value });
-$('start').onclick = () => send({ type: 'start' });
-$('copy').onclick = () => { navigator.clipboard && navigator.clipboard.writeText(location.origin + location.pathname + '?room=' + roomCode); toast('Link kopyalandı'); };
-$('recruit').onclick = doRecruit; $('split').onclick = doSplit; $('stop').onclick = doStop;
-function doRecruit() { if (recruitCell >= 0) send({ type: 'recruit', cell: recruitCell, amount: +$('amt').value }); }
-function doSplit() { send({ type: 'split', units: [...selected] }); }
-function doStop() { send({ type: 'stop', units: [...selected] }); }
-
-// ---------- Girdi ----------
-let drag = null;
-const unitScreen = u => [cam.x + u.rx * CELLPX * cam.s, cam.y + u.ry * CELLPX * cam.s];
-const unitRadius = u => 5 + Math.min(4.5, Math.sqrt(u.troops) * 0.32);
-function unitAt(sx, sy) {
-  let best = null, bd = 1e9;
-  for (const u of units.values()) { const [x, y] = unitScreen(u), d = Math.hypot(x - sx, y - sy); if (d <= unitRadius(u) + 3 && d < bd) { bd = d; best = u; } }
-  return best;
-}
-cv.addEventListener('contextmenu', e => e.preventDefault());
-cv.addEventListener('mousedown', e => {
-  drag = { x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, moved: false, btn: e.button };
-});
-addEventListener('mousemove', e => {
-  if (e.target === cv && world) {
-    const c = toCell(e.clientX, e.clientY), tip = $('tip');
-    if (c >= 0 && cellProv[c]) {
-      const pi = cellProv[c] - 1, pr = world.provs[pi], gm = Math.round(6 + 1.6 * provCount[pi]);
-      tip.classList.remove('hidden');
-      tip.innerHTML = `<b>${esc(pr[0])}</b> · ${esc(world.countries[pr[1]].name)}` + (playing ? ` · Sahip: ${esc(provOwner[pi] ? pname(provOwner[pi]) : 'Tarafsız')} · Garnizon: ${garrison[pi] ?? '?'}/${gm}${world.countries[pr[1]].cap === pi ? ' · 🏛 Başkent' : ''}` : '');
-    } else tip.classList.add('hidden');
-  }
-  if (!drag || drag.btn === 2) return;
-  const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
-  if (Math.hypot(dx, dy) > 4) drag.moved = true;
-  if (drag.moved) { cam.x = drag.cx + dx; cam.y = drag.cy + dy; }
-});
-addEventListener('mouseup', e => {
-  if (!drag) return;
-  const d = drag; drag = null;
-  if (e.target !== cv) return;
-  if (d.btn === 2) { // yürüt
-    if (!playing || ended) return;
-    const c = toCell(e.clientX, e.clientY);
-    if (c >= 0 && cellCountry[c] && selected.size) send({ type: 'move', units: [...selected], cell: c });
-    return;
-  }
-  if (d.moved) return;
-  const sx = e.clientX, sy = e.clientY;
-  if (!playing) { // lobi: ülke seç
-    const c = toCell(sx, sy);
-    if (c >= 0 && cellCountry[c]) send({ type: 'pick', country: cellCountry[c] - 1 });
-    return;
-  }
-  const u = unitAt(sx, sy);
-  if (u && u.owner === myId) {
-    if (e.shiftKey) { selected.has(u.id) ? selected.delete(u.id) : selected.add(u.id); }
-    else { selected.clear(); selected.add(u.id); }
-  } else {
-    selected.clear();
-    const c = toCell(sx, sy);
-    if (c >= 0 && owner[c] === myId) recruitCell = c;
-  }
-});
-cv.addEventListener('wheel', e => {
-  e.preventDefault();
-  const f = Math.exp(-e.deltaY * 0.0015), ns = Math.min(14, Math.max(Math.min(W / world.w, H / world.h) * 0.8, cam.s * f));
-  const wx = (e.clientX - cam.x) / cam.s, wy = (e.clientY - cam.y) / cam.s;
-  cam.s = ns; cam.x = e.clientX - wx * ns; cam.y = e.clientY - wy * ns;
-}, { passive: false });
-addEventListener('keydown', e => {
-  if (e.target.tagName === 'INPUT') { if (e.key === 'Enter' && $('menu').offsetParent) $('create').click(); return; }
-  const k = e.key.toLowerCase();
-  if (!playing) return;
-  if (k === 'a') { selected = new Set([...units.values()].filter(u => u.owner === myId).map(u => u.id)); }
-  else if (k === 'r') doRecruit(); else if (k === 'f') doSplit(); else if (k === 's') doStop();
-  else if (k === 'escape') selected.clear();
-});
-// dokunmatik: tek parmak kaydır, çift parmak yakınlaştır, dokun = seç / uzun bas = yürüt
-let tch = null;
-cv.addEventListener('touchstart', e => {
-  if (e.touches.length === 1) tch = { x: e.touches[0].clientX, y: e.touches[0].clientY, cx: cam.x, cy: cam.y, t: Date.now(), moved: false };
-  else if (e.touches.length === 2) tch = { pinch: true, d: Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY), s: cam.s };
-}, { passive: true });
-cv.addEventListener('touchmove', e => {
-  if (!tch) return; e.preventDefault();
-  if (tch.pinch && e.touches.length === 2) {
-    const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-    const mx = (e.touches[0].clientX + e.touches[1].clientX) / 2, my = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-    const wx = (mx - cam.x) / cam.s, wy = (my - cam.y) / cam.s;
-    cam.s = Math.min(30, Math.max(0.3, tch.s * d / tch.d)); cam.x = mx - wx * cam.s; cam.y = my - wy * cam.s;
-  } else if (!tch.pinch) {
-    const dx = e.touches[0].clientX - tch.x, dy = e.touches[0].clientY - tch.y;
-    if (Math.hypot(dx, dy) > 8) tch.moved = true;
-    if (tch.moved) { cam.x = tch.cx + dx; cam.y = tch.cy + dy; }
-  }
-}, { passive: false });
-cv.addEventListener('touchend', e => {
-  if (!tch || tch.pinch || tch.moved) { tch = null; return; }
-  const sx = tch.x, sy = tch.y, long = Date.now() - tch.t > 450; tch = null;
-  if (!playing) { const c = toCell(sx, sy); if (c >= 0 && cellCountry[c]) send({ type: 'pick', country: cellCountry[c] - 1 }); return; }
-  const u = unitAt(sx, sy);
-  if (long && selected.size) { const c = toCell(sx, sy); if (c >= 0 && cellCountry[c]) send({ type: 'move', units: [...selected], cell: c }); }
-  else if (u && u.owner === myId) { selected.has(u.id) ? selected.delete(u.id) : selected.add(u.id); }
-  else if (selected.size) { const c = toCell(sx, sy); if (c >= 0 && cellCountry[c]) send({ type: 'move', units: [...selected], cell: c }); }
-  else { const c = toCell(sx, sy); if (c >= 0 && owner[c] === myId) recruitCell = c; }
-});
-
-// ---------- Çizim ----------
-let landCv2, landCtx2, landDirty = true, lastCam = { x: 0, y: 0, s: 0, W: 0, H: 0 }, provTiles = [];
-
-function buildProv() {
-  const T = world.prov.tile;
-  provTiles = Object.entries(world.prov.tiles).map(([k, d]) => { const [tx, ty] = k.split(',').map(Number); return { x0: tx * T, y0: ty * T, x1: tx * T + T, y1: ty * T + T, path: new Path2D(d) }; });
-}
-
-// Kara katmanı: kıyı parıltısı + kara + sahiplik + il/ülke sınırları + isimler. Sadece kamera/sahiplik değişince yeniden çizilir.
-function drawLand() {
-  if (!landCv2) { landCv2 = document.createElement('canvas'); landCtx2 = landCv2.getContext('2d'); }
-  if (landCv2.width !== W * DPR || landCv2.height !== H * DPR) { landCv2.width = W * DPR; landCv2.height = H * DPR; }
-  const c = landCtx2;
-  c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, landCv2.width, landCv2.height);
-  c.setTransform(DPR, 0, 0, DPR, 0, 0);
-  c.save(); c.translate(cam.x, cam.y); c.scale(cam.s, cam.s);
-  c.lineJoin = 'round';
-  // sığ su parıltısı
-  c.strokeStyle = 'rgba(140,215,240,.14)'; c.lineWidth = 16 / cam.s; c.stroke(allPath);
-  c.strokeStyle = 'rgba(160,225,245,.18)'; c.lineWidth = 8 / cam.s; c.stroke(allPath);
-  c.strokeStyle = 'rgba(190,235,250,.30)'; c.lineWidth = 3 / cam.s; c.stroke(allPath);
-  // kara
-  c.fillStyle = '#d9d3b8'; c.fill(allPath);
-  // sahiplik
-  c.save(); c.clip(allPath);
-  c.imageSmoothingEnabled = true; c.globalAlpha = 1;
-  c.drawImage(ownCv, 0, 0, world.w, world.h);
-  // il sınırları (yalnız ekrandaki karolar)
-  const vx0 = -cam.x / cam.s, vy0 = -cam.y / cam.s, vx1 = (W - cam.x) / cam.s, vy1 = (H - cam.y) / cam.s;
-  c.strokeStyle = `rgba(60,50,30,${Math.min(.5, .22 + cam.s * .08)})`; c.lineWidth = Math.max(0.35, Math.min(1.1, cam.s * 0.45)) / cam.s;
-  for (const t of provTiles) if (t.x1 >= vx0 && t.x0 <= vx1 && t.y1 >= vy0 && t.y0 <= vy1) c.stroke(t.path);
-  c.restore();
-  // sahiplik sınır çizgileri
-  c.lineCap = 'butt'; c.lineJoin = 'miter'; c.lineWidth = Math.max(1.5, Math.min(3, cam.s * 1.1)) / cam.s;
-  for (const [o, ar, pth] of borderPaths) { c.save(); c.clip(ar); c.strokeStyle = colorOf(o); c.lineWidth *= 2; c.stroke(pth); c.restore(); }
-  // ülke sınırları
-  c.lineWidth = 1.1 / cam.s; c.strokeStyle = 'rgba(25,25,25,.55)'; c.stroke(allPath);
-  // ülke adları
-  c.textAlign = 'center'; c.textBaseline = 'middle';
-  for (const k of world.countries) {
-    const px = Math.sqrt(k.area) * cam.s;
-    if (px < 38) continue;
-    c.font = `${Math.min(16, px / 7) / cam.s}px system-ui`; c.fillStyle = 'rgba(20,20,20,.55)';
-    c.fillText(k.name, k.cx, k.cy);
-  }
-  c.restore();
-}
-
-// Dalgalı deniz
-function drawSea(now) {
-  const t = now / 1000;
-  const g = ctx.createLinearGradient(0, 0, 0, H);
-  g.addColorStop(0, '#1d4e6e'); g.addColorStop(.5, '#1a4666'); g.addColorStop(1, '#153a57');
-  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-  const sp = 26, par = 0.55;                       // satır aralığı, kamera paralaksı
-  const oy = ((cam.y * par) % sp + sp) % sp, ox = cam.x * par;
-  ctx.lineWidth = 1.4; ctx.lineCap = 'round';
-  for (let row = -1, y = oy - sp; y < H + sp; row++, y += sp) {
-    const k = Math.floor((y - oy) / sp);
-    const ph = t * (0.9 + (k & 3) * 0.15) + k * 1.7 - ox * 0.012;
-    const amp = 3 + (k & 1) * 1.5;
-    ctx.beginPath();
-    for (let x = -10; x <= W + 10; x += 14) {
-      const yy = y + Math.sin(x * 0.026 + ph) * amp + Math.sin(x * 0.011 - ph * 0.6 + k) * 2;
-      x === -10 ? ctx.moveTo(x, yy) : ctx.lineTo(x, yy);
-    }
-    ctx.strokeStyle = `rgba(190,230,250,${0.07 + ((k & 3) === 0 ? 0.06 : 0)})`; ctx.stroke();
-  }
-  // ışıltı (köpük çizgileri)
-  ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(255,255,255,.12)';
-  for (let k = 0; k < 40; k++) {
-    const bx = ((k * 211.7 + t * (6 + (k % 5) * 3) + ox * 0.5) % (W + 160) + W + 160) % (W + 160) - 80;
-    const by = ((k * 97.3 + oy * 1.0 + (k % 7) * 31) % H + H) % H;
-    const len = 10 + (k % 4) * 6, w = Math.sin(t * 1.3 + k) * 2;
-    ctx.beginPath(); ctx.moveTo(bx, by + w); ctx.quadraticCurveTo(bx + len / 2, by - 3 + w, bx + len, by + w); ctx.stroke();
-  }
-}
-
-let last = performance.now();
-function frame(now) {
-  const dt = Math.min(0.1, (now - last) / 1000); last = now;
-  for (const u of units.values()) { const k = Math.min(1, dt * 9); u.rx += (u.x - u.rx) * k; u.ry += (u.y - u.ry) * k; }
-  if (ownDirty) { ownCtx.putImageData(ownImg, 0, 0); rebuildBorders(); ownDirty = false; landDirty = true; }
-  if (cam.x !== lastCam.x || cam.y !== lastCam.y || cam.s !== lastCam.s || W !== lastCam.W || H !== lastCam.H) { landDirty = true; lastCam = { x: cam.x, y: cam.y, s: cam.s, W, H }; }
-  if (landDirty) { drawLand(); landDirty = false; }
-  draw(now);
-  requestAnimationFrame(frame);
-}
-function draw(now) {
-  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  drawSea(now);
-  ctx.drawImage(landCv2, 0, 0, W, H);
-  ctx.save(); ctx.translate(cam.x, cam.y); ctx.scale(cam.s, cam.s);
-  // seçili bölüklerin hedef çizgileri
-  ctx.setLineDash([6 / cam.s, 5 / cam.s]); ctx.lineWidth = 2 / cam.s; ctx.strokeStyle = 'rgba(255,255,255,.9)';
-  for (const id of selected) {
-    const u = units.get(id); if (!u || u.dest < 0) continue;
-    ctx.beginPath(); ctx.moveTo(u.rx * CELLPX, u.ry * CELLPX);
-    ctx.lineTo(((u.dest % GW) + .5) * CELLPX, (((u.dest / GW) | 0) + .5) * CELLPX); ctx.stroke();
-  }
-  ctx.setLineDash([]);
-  // kurma noktası
-  if (playing && recruitCell >= 0 && owner[recruitCell] === myId) {
-    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2 / cam.s;
-    const x = ((recruitCell % GW) + .5) * CELLPX, y = (((recruitCell / GW) | 0) + .5) * CELLPX;
-    ctx.strokeRect(x - CELLPX * .6, y - CELLPX * .6, CELLPX * 1.2, CELLPX * 1.2);
-  }
-  ctx.restore();
-  // bölükler (ekran ölçeğinde)
-  for (const u of [...units.values()].sort((a, b) => a.ry - b.ry)) {
-    const [x, y] = unitScreen(u), r = unitRadius(u);
-    if (x < -30 || y < -30 || x > W + 30 || y > H + 30) continue;
-    ctx.beginPath(); ctx.arc(x, y, r, 0, 7);
-    ctx.fillStyle = colorOf(u.owner); ctx.fill();
-    ctx.lineWidth = 1.8; ctx.strokeStyle = '#fff'; ctx.stroke();
-    if (selected.has(u.id)) { ctx.beginPath(); ctx.arc(x, y, r + 3, 0, 7); ctx.strokeStyle = '#ffe14d'; ctx.lineWidth = 2; ctx.stroke(); }
-    if (u.fight) { ctx.beginPath(); ctx.arc(x, y, r + 4 + Math.sin(now / 90) * 1.5, 0, 7); ctx.strokeStyle = '#ff3b3b'; ctx.lineWidth = 2; ctx.stroke(); }
-  }
-}
-
-init();
-</script>
+<script src="app.js"></script>
 </body>
 </html>
